@@ -115,12 +115,10 @@ void readMemoryByte(size_t malicious_x, uint8_t value[2], int score[2]) {
   score[1] = results[k];
 }
 
-int main(int argc,
-  const char * * argv) {
+int main(int argc, const char * * argv) {
   size_t malicious_x = (size_t)(secret - (char * ) array1); /* default for malicious_x */
   int i, score[2], len = 23;
   uint8_t value[2];
-  // printf() displays the string inside quotation
   for (i = 0; i < sizeof(array2); i++)
     array2[i] = 1; /* write to array2 so in RAM not copy-on-write zero pages */
 
