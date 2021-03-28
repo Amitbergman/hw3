@@ -99,7 +99,9 @@ void readMemoryByte(size_t malicious_x, uint8_t value[2], int score[2]) {
         time2 = __rdtscp(&junk) - time1; /* READ TIMER & COMPUTE ELAPSED TIME */
         if (time2 <= CACHE_HIT_THRESHOLD ) { //TODO: also check it is not the thing in 4096
             results[mix_i]++; /* cache hit - add +1 to score for this value */
-            printf("got here with: %d after %d cycles \n", mix_i, time2);
+            printf("got here with: %d after cycles:", mix_i);
+            printf("%" PRId64 "\n", time2);
+
         }
     }
   }
