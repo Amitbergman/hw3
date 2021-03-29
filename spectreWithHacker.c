@@ -163,7 +163,7 @@ int main(int argc, const char * * argv) {
       }
   }
   bigArray[malicious_x] = 'A';
-  printf("Malicious x is %d", malicious_x);
+  printf("Malicious x is %zu", malicious_x);
   while (--len >= 0) {
     printf("iteration %d \n", len);
     readMemoryByte(malicious_x, value, score);
