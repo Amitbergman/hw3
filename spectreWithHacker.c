@@ -84,7 +84,7 @@ void readMemoryByte(size_t malicious_x, uint8_t value[3], int score[3]) {
 
         addr = &bigArray[malicious_x];
 
-        secret[0] = 'q';
+        //secret[0] = 'q';
 
         data = *addr;
         //Now the data from bigArray[0] is supposed to temporarily be in (data) so we will access this point
