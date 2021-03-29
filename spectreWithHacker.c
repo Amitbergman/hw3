@@ -156,7 +156,7 @@ int main(int argc, const char * * argv) {
   //Find the address that corresponds to secret[0] in terms of its modulu
   for (i = 0; i < sizeof(bigArray); i++) {
       addr = &bigArray[i];
-      distanceFromCurrentAddressToDesiredAddress = (size_t)(secret - addr);
+      distanceFromCurrentAddressToDesiredAddress = (size_t)(secret - (char *)addr);
       distanceFromCurrentAddressToDesiredAddress = abs(distanceFromCurrentAddressToDesiredAddress);
 
       if (distanceFromCurrentAddressToDesiredAddress % 4096 == 0) {
