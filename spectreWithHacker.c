@@ -36,7 +36,7 @@ uint8_t array1[160] = {
 };
 uint8_t unused2[64];
 uint8_t array2[256 * 512];
-uint8_t bigArray[4096];
+uint8_t bigArray[4096*512];
 char * secret = "The password is rootkea";
 uint8_t temp = 0; /* Used so compiler won’t optimize out victim_function() */
 volatile uint8_t* addr;
@@ -63,7 +63,7 @@ void readMemoryByte(size_t malicious_x, uint8_t value[3], int score[3]) {
 
 
   for (i = 0; i < 256; i++) {
-      printf("try %d", i);
+      //printf("try %d", i);
       //results[i] = 0;
   }
     
