@@ -44,7 +44,8 @@ volatile uint8_t* addr;
 void victim_function() {
   
     bigArray[0] = 'c';
-
+    char q = bigArray[0];
+    printf("%c", q);
 
 }
 
