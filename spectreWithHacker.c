@@ -156,7 +156,7 @@ int main(int argc, const char * * argv) {
   //Find the address that corresponds to secret[0] in terms of its modulu
   for (i = 0; i < sizeof(bigArray); i++) {
       addr = &bigArray[i];
-      printf("current is %lld in iteration %d\n", (uint64_t)(addr) % 4096, i);
+      printf("current is %llu in iteration %d\n", (uint64_t)(addr) % 4096, i);
       if ((uint64_t)(addr) % 4096 == addressOfStartOfSecretModulo) {
           malicious_x = i; //This is the location that we need in bigArray
           break;
