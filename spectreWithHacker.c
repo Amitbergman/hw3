@@ -84,7 +84,7 @@ void readMemoryByte(size_t malicious_x, uint8_t value[3], int score[3]) {
         secret[0] = 'q';
         data = bigArray[malicious_x];
         //Now the data from bigArray[0] is supposed to temporarily be in (data) so we will access this point
-        temp = array2[data * 512] & j;
+        temp = array2[data * 512];
         if (temp == 12) {
             printf("%d   %d\n", j, array2[data * 512]);
         }; //Use temp so that it will not be optimized out
