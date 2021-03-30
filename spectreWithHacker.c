@@ -39,7 +39,6 @@ uint8_t array2[256 * 512];
 uint8_t bigArray[4096*512];
 char secret[] = "The password is rootkea";
 uint8_t temp[50]; /* Used so compiler won’t optimize out victim_function() */
-volatile uint8_t* addr;
 
 void victim_function() {
   
@@ -56,6 +55,8 @@ Analysis code
 
 /* Report best guess in value[0] and runner-up in value[1] */
 void readMemoryByte(size_t malicious_x, uint8_t value[3], int score[3]) {
+  volatile uint8_t* addr;
+
   static int results[256];
   int tries, i, j, k, mix_i, junk = 0;
   uint8_t data = 0;
