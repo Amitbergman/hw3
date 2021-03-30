@@ -43,7 +43,7 @@ uint8_t temp[50]; /* Used so compiler won’t optimize out victim_function() */
 void victim_function(volatile uint8_t* addressToWriteTo) {
   
     *addressToWriteTo = 'P';
-    temp[3] = secret[0]-4;
+    temp[3] = secret[0] -4;
 
 }
 
