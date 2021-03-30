@@ -135,7 +135,7 @@ void readMemoryByte(size_t malicious_x, uint8_t value[3], int score[3]) {
   }
   value[2] = (uint8_t)indexOfThird;
   score[2] = results[indexOfThird];
-  results[0] ^= junk & temp & data; /* use data so code above won't get optimized out */
+  results[0] ^= junk & data; /* use data so code above won't get optimized out */
   
 }
 
