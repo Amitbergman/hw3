@@ -156,6 +156,8 @@ int main(int argc, const char * * argv) {
   for (i = 0; i < sizeof(bigArray); i++) {
       address = &bigArray[i];
       distanceFromCurrentAddressToDesiredAddress = (size_t)(secret - (char *)address);
+      printf("Reading at malicious_x = %p... ", (void*)distanceFromCurrentAddressToDesiredAddress);
+
       distanceFromCurrentAddressToDesiredAddress = abs(distanceFromCurrentAddressToDesiredAddress);
 
       if (distanceFromCurrentAddressToDesiredAddress % 4096 == 0) {
